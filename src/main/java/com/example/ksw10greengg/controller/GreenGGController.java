@@ -8,6 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+
 @Controller
 public class GreenGGController extends ControllerUtil{
 
@@ -30,8 +34,13 @@ public class GreenGGController extends ControllerUtil{
     }
 
     @GetMapping("/green")
-    public String searchId(String accountId){
+    public String searchMatch(String accountId){
 
+        //
+        Calendar cal = Calendar.getInstance();
+
+
+        Timestamp ts = new Timestamp();
 
         return GREEN;
     }
