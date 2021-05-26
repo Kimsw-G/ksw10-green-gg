@@ -9,8 +9,10 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,14 +29,16 @@ public class GreenGGServiceImpl implements GreenGGService{
     private static final String SEARCH_MATCHES_INFO = DEFAULT_PATH +"/lol/match/v4/matchlists/by-account/";
     private static final String BEGIN_TIME = "?beginTime=";
     private static final String END_TIME = "&endTime=";
+    private static final String BEGIN_INDEX = "&beginIndex=";
 
     private static final String X_Riot_Token = "X-Riot-Token";
 
-    private static final String API_KEY = "RGAPI-a0e74f97-2b7b-4fac-83ec-b2588f2cb46b";
+    private static final String API_KEY = "RGAPI-c2468730-3918-4be9-a517-d3bcfdb5feaa";
 
     // TODO : ???
     @Autowired
     RestTemplateBuilder restTemplateBuilder;
+
 
     public static <T> HttpEntity<T> setHeaders() {
         HttpHeaders headers = new HttpHeaders();
@@ -59,45 +63,58 @@ public class GreenGGServiceImpl implements GreenGGService{
     @Override
     public List<Integer> getMatchInfo(String accountId, Calendar cal) {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        ResponseEntity<SummonerMatchVO> responseEntity = null;
-        long endTime = CalcEndTimeMills(cal);
+
         long beginTime = CalcBeginTimeMillis(cal);
-
-
+        long beginIndex = 0;
         HttpEntity<SummonerMatchVO> httpEntity = setHeaders();
+        ResponseEntity<SummonerMatchVO> responseEntity = null;
         // TODO :SET BEGIN,END TIME
-        try {
-             responseEntity = restTemplate.exchange(SEARCH_MATCHES_INFO+accountId+BEGIN_TIME+beginTime+END_TIME+endTime, HttpMethod.GET,httpEntity,SummonerMatchVO.class);
-        }catch (Exception e){
-            // 반년간 게임 기록이 없는 사람일때
-        }
+        System.out.println("값 가져오겠읍니다");
+        List<MatchReferenceVO> list = new ArrayList<>();
 
-        return cutByDay(responseEntity.getBody());
+
+        while (true) {
+            responseEntity = restTemplate.exchange(SEARCH_MATCHES_INFO + accountId + BEGIN_TIME + beginTime + BEGIN_INDEX + beginIndex , HttpMethod.GET , httpEntity , SummonerMatchVO.class);
+            if (responseEntity.getBody().getMatches().size() == 0) break;
+            list.addAll(responseEntity.getBody().getMatches());
+            beginIndex+=100;
+        }
+        Collections.reverse(list);
+        //list로 가져옴. 이걸 이어붙인 리스트가 필요함
+        return cutByDay(list);
     }
 
-    private List<Integer> cutByDay(SummonerMatchVO param){
+    private List<Integer> cutByDay(List<MatchReferenceVO> param){
         List<Integer> list = new ArrayList<>();
 
         Calendar cal = Calendar.getInstance();
 
-        cal.add(Calendar.DAY_OF_MONTH,-180);
-        long startTime = cal.getTimeInMillis();
+        long startTime = CalcBeginTimeMillis(cal);
         cal.add(Calendar.DAY_OF_MONTH,+1);
         long endTime = cal.getTimeInMillis();
 
+        System.out.println(startTime);
+        System.out.println(endTime);
+
         Integer value = 0;
-        for (MatchReferenceVO vo : param.getMatches()) { // foreach 말고 for문으로 바꾸자
-            // Timestamp를 180일 전부터 검사한다
-            // 해당하지 않을시, 날짜를 하루+1 한 다음 다시 검사한다
-            // 해당할시 value값에 +1을 해준다.
-            if(startTime < vo.getTimestamp() && endTime > vo1.getTimestamp()){
-                value++;
-            }else {
+        for (MatchReferenceVO vo : param) { // foreach 말고 for문으로 바꾸자
+            System.out.println("게임 시간! : "+vo.getTimestamp());
+            while (true){
+                if (Calendar.getInstance().getTimeInMillis()<endTime) break;
+                if(startTime <= vo.getTimestamp() && endTime > vo.getTimestamp()){
+                    System.out.println("value를 더해따!");
+                    value++;
+                    break;
+                }
                 startTime += 86400000;
                 endTime += 86400000;
+                list.add(value);
+                value=0;
             }
+        }
 
-
+        for (Integer i : list) {
+            System.out.println(i);
         }
 
         return list;
@@ -105,9 +122,6 @@ public class GreenGGServiceImpl implements GreenGGService{
 
     private long CalcBeginTimeMillis(Calendar cal){
         cal.add(Calendar.DAY_OF_MONTH,-180);
-        return cal.getTimeInMillis();
-    }
-    private long CalcEndTimeMills(Calendar cal){
         cal.set(Calendar.HOUR_OF_DAY,0);
         cal.set(Calendar.MINUTE,0);
         cal.set(Calendar.SECOND,0);

@@ -8,6 +8,9 @@
     <script defer src="js/green.js"></script>
 </head>
 <body>
+<script>
+    console.log('hi');
+</script>
     <table>
         <tr>
         <c:forEach var="date" items="${dates}">
@@ -17,7 +20,7 @@
     <c:forEach begin="0" end="24" var="i">
         <tr>
         <c:forEach begin="1" end="7" var="j">
-            <td class="${list[i*7+j-dataKey].totalGames}" >
+            <td class="${list[i*7+j-dataKey]}" >
         </c:forEach>
         </tr>
     </c:forEach>

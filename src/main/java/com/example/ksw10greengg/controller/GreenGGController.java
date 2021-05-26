@@ -48,6 +48,7 @@ public class GreenGGController extends ControllerUtil{
 //        }
         list = greenGGService.getMatchInfo(accountId,cal);
 
+        System.out.println("나와따");
         model.addAttribute("dates",new String[]{"월","화","수","목","금","토","일"});
         model.addAttribute("list",list);
         return GREEN;
