@@ -1,5 +1,6 @@
 package com.example.ksw10greengg.service;
 
+import com.example.ksw10greengg.model.MatchReferenceVO;
 import com.example.ksw10greengg.model.SummonerMatchVO;
 import com.example.ksw10greengg.model.SummonerVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class GreenGGServiceImpl implements GreenGGService{
@@ -52,13 +57,61 @@ public class GreenGGServiceImpl implements GreenGGService{
     }
 
     @Override
-    public SummonerMatchVO getMatchInfo(String accountId,long beginTime, long endTime) {
+    public List<Integer> getMatchInfo(String accountId, Calendar cal) {
         RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<SummonerMatchVO> responseEntity = null;
+        long endTime = CalcEndTimeMills(cal);
+        long beginTime = CalcBeginTimeMillis(cal);
+
 
         HttpEntity<SummonerMatchVO> httpEntity = setHeaders();
         // TODO :SET BEGIN,END TIME
-        ResponseEntity<SummonerMatchVO> responseEntity = restTemplate.exchange(SEARCH_MATCHES_INFO+accountId+BEGIN_TIME+beginTime+END_TIME+endTime, HttpMethod.GET,httpEntity,SummonerMatchVO.class);
+        try {
+             responseEntity = restTemplate.exchange(SEARCH_MATCHES_INFO+accountId+BEGIN_TIME+beginTime+END_TIME+endTime, HttpMethod.GET,httpEntity,SummonerMatchVO.class);
+        }catch (Exception e){
+            // 반년간 게임 기록이 없는 사람일때
+        }
 
-        return responseEntity.getBody();
+        return cutByDay(responseEntity.getBody());
+    }
+
+    private List<Integer> cutByDay(SummonerMatchVO param){
+        List<Integer> list = new ArrayList<>();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.add(Calendar.DAY_OF_MONTH,-180);
+        long startTime = cal.getTimeInMillis();
+        cal.add(Calendar.DAY_OF_MONTH,+1);
+        long endTime = cal.getTimeInMillis();
+
+        Integer value = 0;
+        for (MatchReferenceVO vo : param.getMatches()) { // foreach 말고 for문으로 바꾸자
+            // Timestamp를 180일 전부터 검사한다
+            // 해당하지 않을시, 날짜를 하루+1 한 다음 다시 검사한다
+            // 해당할시 value값에 +1을 해준다.
+            if(startTime < vo.getTimestamp() && endTime > vo1.getTimestamp()){
+                value++;
+            }else {
+                startTime += 86400000;
+                endTime += 86400000;
+            }
+
+
+        }
+
+        return list;
+    }
+
+    private long CalcBeginTimeMillis(Calendar cal){
+        cal.add(Calendar.DAY_OF_MONTH,-180);
+        return cal.getTimeInMillis();
+    }
+    private long CalcEndTimeMills(Calendar cal){
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.MINUTE,0);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND,0);
+        return cal.getTimeInMillis();
     }
 }

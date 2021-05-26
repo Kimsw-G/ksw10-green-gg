@@ -1,16 +1,20 @@
 package com.example.ksw10greengg.controller;
 
+import com.example.ksw10greengg.model.SummonerMatchVO;
 import com.example.ksw10greengg.model.SummonerVO;
 import com.example.ksw10greengg.service.GreenGGService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class GreenGGController extends ControllerUtil{
@@ -34,14 +38,18 @@ public class GreenGGController extends ControllerUtil{
     }
 
     @GetMapping("/green")
-    public String searchMatch(String accountId){
-
-        //
+    public String searchMatch(String accountId, Model model){
         Calendar cal = Calendar.getInstance();
+        model.addAttribute("dateKey",(cal.get(Calendar.DAY_OF_WEEK)));
+        List<Integer> list = new ArrayList<>();
+//        for(int i=0; i<180;i++){
+//            list.add(0,greenGGService.getMatchInfo(accountId,cal));
+//            cal.add(Calendar.DAY_OF_MONTH,-2);
+//        }
+        list = greenGGService.getMatchInfo(accountId,cal);
 
-
-        Timestamp ts = new Timestamp();
-
+        model.addAttribute("dates",new String[]{"월","화","수","목","금","토","일"});
+        model.addAttribute("list",list);
         return GREEN;
     }
 }

@@ -3,6 +3,9 @@ package com.example.ksw10greengg.service;
 import com.example.ksw10greengg.model.SummonerMatchVO;
 import com.example.ksw10greengg.model.SummonerVO;
 
+import java.util.Calendar;
+import java.util.List;
+
 public interface GreenGGService {
 
     // 무어시 피료하까요
@@ -13,6 +16,6 @@ public interface GreenGGService {
     // 날짜별로 가져와서
     // 180개 가져온다 (반년)
     // totalGames 가져온다
-    SummonerMatchVO getMatchInfo(String accountId,long beginTime, long endTime);
+    List<Integer> getMatchInfo(String accountId, Calendar cal);
 
 }
