@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" href="/css/green.css">
-    <script defer src="js/green.js"></script>
+    <script defer src="/js/green.js"></script>
 </head>
 <body>
 <script>
