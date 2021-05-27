@@ -1,5 +1,6 @@
 package com.example.ksw10greengg.service;
 
+import com.example.ksw10greengg.model.GreenInfo;
 import com.example.ksw10greengg.model.MatchReferenceVO;
 import com.example.ksw10greengg.model.SummonerMatchVO;
 import com.example.ksw10greengg.model.SummonerVO;
@@ -61,7 +62,7 @@ public class GreenGGServiceImpl implements GreenGGService{
     }
 
     @Override
-    public List<Integer> getMatchInfo(String accountId, Calendar cal) {
+    public List<GreenInfo> getMatchInfo(String accountId, Calendar cal) {
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         long beginTime = CalcBeginTimeMillis(cal);
@@ -84,39 +85,55 @@ public class GreenGGServiceImpl implements GreenGGService{
         return cutByDay(list);
     }
 
-    private List<Integer> cutByDay(List<MatchReferenceVO> param){
-        List<Integer> list = new ArrayList<>();
+    private List<GreenInfo> cutByDay(List<MatchReferenceVO> param){
+        List<GreenInfo> list = new ArrayList<>();
 
-        Calendar cal = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
 
-        long startTime = CalcBeginTimeMillis(cal);
-        cal.add(Calendar.DAY_OF_MONTH,+1);
-        long endTime = cal.getTimeInMillis();
+        long startTime = CalcBeginTimeMillis(today);
+        today.add(Calendar.DAY_OF_MONTH,+1);
+        long endTime = today.getTimeInMillis();
 
         System.out.println(startTime);
         System.out.println(endTime);
 
-        Integer value = 0;
-        for (MatchReferenceVO vo : param) { // foreach 말고 for문으로 바꾸자
-            System.out.println("게임 시간! : "+vo.getTimestamp());
-            while (true){
-                if (Calendar.getInstance().getTimeInMillis()<endTime) break;
-                if(startTime <= vo.getTimestamp() && endTime > vo.getTimestamp()){
-                    System.out.println("value를 더해따!");
-                    value++;
-                    break;
-                }
+        int matchCnt = 0;
+        int key = 0;
+        boolean flag = true;
+        while (true) { // foreach 말고 for문으로 바꾸자
+            if(flag&&startTime <= param.get(key).getTimestamp() && endTime > param.get(key).getTimestamp()){
+                matchCnt++;
+                key++;
+                // key의 indexOutOfBoundary 방지!
+                if(key==param.size()) flag = false;
+            }else {
+                Calendar cal = Calendar.getInstance();
+                GreenInfo gInfo = new GreenInfo();
+                cal.setTimeInMillis(endTime);
+                gInfo.setMatchCnt(matchCnt);
+                gInfo.setYear(cal.get(Calendar.YEAR));
+                gInfo.setMonth(cal.get(Calendar.MONTH)+1);
+                gInfo.setDay(cal.get(Calendar.DAY_OF_MONTH));
+
+                list.add(gInfo);
                 startTime += 86400000;
                 endTime += 86400000;
-                list.add(value);
-                value=0;
+                matchCnt=0;
+            }
+            Calendar imsiCal = Calendar.getInstance();
+            imsiCal.setTimeInMillis(startTime);
+            System.out.println("startTime : "+imsiCal.get(Calendar.DAY_OF_MONTH)+ " , "+imsiCal.getTimeInMillis());
+            System.out.println("nowTime : "+Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+ " , "+Calendar.getInstance().getTimeInMillis());
+            if (Calendar.getInstance().getTimeInMillis()<startTime) {
+                System.out.println("멈췄지롱");
+                list.remove(list.size()-1);
+                break;
             }
         }
 
-        for (Integer i : list) {
-            System.out.println(i);
+        for (GreenInfo g : list) {
+            System.out.println(g.getDay());
         }
-
         return list;
     }
 

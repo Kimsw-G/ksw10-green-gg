@@ -17,10 +17,15 @@
             <th>${date}</th>
         </c:forEach>
         </tr>
-    <c:forEach begin="0" end="24" var="i">
+    <c:forEach begin="1" end="25" var="i">
         <tr>
         <c:forEach begin="1" end="7" var="j">
-            <td class="${list[i*7+j-dataKey]}" >
+            <td class="${list[i*7+j-dataKey].matchCnt}" >
+                <p class="arrow_box">
+                    ${list[i*7+j-dataKey].year}.${list[i*7+j-dataKey].month}.${list[i*7+j-dataKey].day}<br>
+                    ${list[i*7+j-dataKey].matchCnt}
+                </p>
+            </td>
         </c:forEach>
         </tr>
     </c:forEach>

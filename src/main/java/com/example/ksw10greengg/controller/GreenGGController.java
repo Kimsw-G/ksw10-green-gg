@@ -1,5 +1,6 @@
 package com.example.ksw10greengg.controller;
 
+import com.example.ksw10greengg.model.GreenInfo;
 import com.example.ksw10greengg.model.SummonerMatchVO;
 import com.example.ksw10greengg.model.SummonerVO;
 import com.example.ksw10greengg.service.GreenGGService;
@@ -40,12 +41,8 @@ public class GreenGGController extends ControllerUtil{
     @GetMapping("/green")
     public String searchMatch(String accountId, Model model){
         Calendar cal = Calendar.getInstance();
-        model.addAttribute("dateKey",(cal.get(Calendar.DAY_OF_WEEK)));
-        List<Integer> list = new ArrayList<>();
-//        for(int i=0; i<180;i++){
-//            list.add(0,greenGGService.getMatchInfo(accountId,cal));
-//            cal.add(Calendar.DAY_OF_MONTH,-2);
-//        }
+        model.addAttribute("dateKey",(7-cal.get(Calendar.DAY_OF_WEEK)));
+        List<GreenInfo> list = new ArrayList<>();
         list = greenGGService.getMatchInfo(accountId,cal);
 
         System.out.println("나와따");

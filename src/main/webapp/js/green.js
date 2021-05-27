@@ -13,3 +13,14 @@ for (const td of tds) {
         td.style.backgroundColor = "#FFFF00";
     }
 }
+
+let tdElm = document.getElementsByTagName("td");
+let pElm = document.getElementsByTagName("p");
+for(let i = 0;i<tdElm.length;i++){
+    tdElm[i].addEventListener('mouseover', function() {
+        pElm[i].style.display = 'block';
+    })
+    tdElm[i].addEventListener('mouseout', function() {
+        pElm[i].style.display = 'none';
+    })
+}
