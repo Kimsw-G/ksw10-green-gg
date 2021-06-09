@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>GREENGG</title>
+    <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Green.GG</h1>kr
-  <form action="/" method="post">
-    <input type="text" name="id" id="id">
+  <h1 id="title">Green.GG</h1>
+  <form action="/" method="post" id="search-form">
+    <input type="text" name="id" id="id_s">
     <input type="submit" name="btn_s" id="btn_s" value="검색">
   </form>
 </body>

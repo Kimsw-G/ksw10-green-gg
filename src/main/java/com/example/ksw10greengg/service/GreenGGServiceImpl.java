@@ -10,7 +10,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -34,7 +33,7 @@ public class GreenGGServiceImpl implements GreenGGService{
 
     private static final String X_Riot_Token = "X-Riot-Token";
 
-    private static final String API_KEY = "RGAPI-c2468730-3918-4be9-a517-d3bcfdb5feaa";
+    private static final String API_KEY = "RGAPI-eb7e23aa-6172-47f6-8364-1d0e12617943";
 
     // TODO : ???
     @Autowired
