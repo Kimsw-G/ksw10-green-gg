@@ -33,7 +33,7 @@ public class GreenGGServiceImpl implements GreenGGService{
 
     private static final String X_Riot_Token = "X-Riot-Token";
 
-    private static final String API_KEY = "RGAPI-eb7e23aa-6172-47f6-8364-1d0e12617943";
+    private static final String API_KEY = "RGAPI-33eacae8-a3ac-4455-804b-5438ac93afa2";
 
     // TODO : ???
     @Autowired
@@ -69,7 +69,6 @@ public class GreenGGServiceImpl implements GreenGGService{
         HttpEntity<SummonerMatchVO> httpEntity = setHeaders();
         ResponseEntity<SummonerMatchVO> responseEntity = null;
         // TODO :SET BEGIN,END TIME
-        System.out.println("값 가져오겠읍니다");
         List<MatchReferenceVO> list = new ArrayList<>();
 
 
@@ -93,8 +92,6 @@ public class GreenGGServiceImpl implements GreenGGService{
         today.add(Calendar.DAY_OF_MONTH,+1);
         long endTime = today.getTimeInMillis();
 
-        System.out.println(startTime);
-        System.out.println(endTime);
 
         int matchCnt = 0;
         int key = 0;
@@ -121,18 +118,12 @@ public class GreenGGServiceImpl implements GreenGGService{
             }
             Calendar imsiCal = Calendar.getInstance();
             imsiCal.setTimeInMillis(startTime);
-            System.out.println("startTime : "+imsiCal.get(Calendar.DAY_OF_MONTH)+ " , "+imsiCal.getTimeInMillis());
-            System.out.println("nowTime : "+Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+ " , "+Calendar.getInstance().getTimeInMillis());
             if (Calendar.getInstance().getTimeInMillis()<startTime) {
-                System.out.println("멈췄지롱");
                 list.remove(list.size()-1);
                 break;
             }
         }
 
-        for (GreenInfo g : list) {
-            System.out.println(g.getDay());
-        }
         return list;
     }
 
