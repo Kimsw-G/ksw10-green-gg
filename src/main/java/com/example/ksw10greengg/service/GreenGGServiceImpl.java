@@ -18,8 +18,6 @@ import java.util.List;
 @Service
 public class GreenGGServiceImpl implements GreenGGService{
 
-    //TODO : Logger는 뭐하는 친구지?
-
     // 기본 정보들
     private static final String RIOTGAMES_URL = "https://developer.riotgames.com";
 
@@ -33,12 +31,10 @@ public class GreenGGServiceImpl implements GreenGGService{
 
     private static final String X_Riot_Token = "X-Riot-Token";
 
-    private static final String API_KEY = "RGAPI-33eacae8-a3ac-4455-804b-5438ac93afa2";
+    private static final String API_KEY = "";
 
-    // TODO : ???
     @Autowired
     RestTemplateBuilder restTemplateBuilder;
-
 
     public static <T> HttpEntity<T> setHeaders() {
         HttpHeaders headers = new HttpHeaders();
@@ -50,13 +46,11 @@ public class GreenGGServiceImpl implements GreenGGService{
 
     @Override
     public SummonerVO getSummonerInfo(String id) {
-        // TODO : ?????2
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         HttpEntity<SummonerVO> httpEntity = setHeaders();
         ResponseEntity<SummonerVO> responseEntity = restTemplate.exchange(SEARCH_SUMMONER_INFO+id, HttpMethod.GET,httpEntity,SummonerVO.class);
 
-        //
         return responseEntity.getBody();
     }
 
@@ -68,7 +62,6 @@ public class GreenGGServiceImpl implements GreenGGService{
         long beginIndex = 0;
         HttpEntity<SummonerMatchVO> httpEntity = setHeaders();
         ResponseEntity<SummonerMatchVO> responseEntity = null;
-        // TODO :SET BEGIN,END TIME
         List<MatchReferenceVO> list = new ArrayList<>();
 
 
@@ -96,11 +89,10 @@ public class GreenGGServiceImpl implements GreenGGService{
         int matchCnt = 0;
         int key = 0;
         boolean flag = true;
-        while (true) { // foreach 말고 for문으로 바꾸자
+        while (true) {
             if(flag&&startTime <= param.get(key).getTimestamp() && endTime > param.get(key).getTimestamp()){
                 matchCnt++;
                 key++;
-                // key의 indexOutOfBoundary 방지!
                 if(key==param.size()) flag = false;
             }else {
                 Calendar cal = Calendar.getInstance();
