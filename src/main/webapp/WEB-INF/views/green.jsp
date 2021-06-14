@@ -5,12 +5,20 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" href="/css/green.css">
+    <script defer src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script defer src="/js/green.js"></script>
 </head>
 <body>
-<script>
-    console.log('hi');
-</script>
+    <div>
+
+        <img src="http://ddragon.leagueoflegends.com/cdn/11.12.1/img/profileicon/${info.profileIconId}.png">
+        ${info.name}
+        <a id="kakao-link-btn" href="javascript:sendLink()">
+            <img
+                    src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png"
+            />
+        </a>
+    </div>
     <table>
         <tr>
         <c:forEach var="date" items="${dates}">
@@ -31,5 +39,9 @@
     </c:forEach>
 
     </table>
+
+    <footer>
+        <a href="https://github.com/Kimsw-G/ksw10-green-gg">https://github.com/Kimsw-G/ksw10-green-gg</a>
+    </footer>
 </body>
 </html>

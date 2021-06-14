@@ -49,7 +49,8 @@ public class GreenGGServiceImpl implements GreenGGService{
         RestTemplate restTemplate = restTemplateBuilder.build();
 
         HttpEntity<SummonerVO> httpEntity = setHeaders();
-        ResponseEntity<SummonerVO> responseEntity = restTemplate.exchange(SEARCH_SUMMONER_INFO+id, HttpMethod.GET,httpEntity,SummonerVO.class);
+        ResponseEntity<SummonerVO> responseEntity
+                = restTemplate.exchange(SEARCH_SUMMONER_INFO+id, HttpMethod.GET,httpEntity,SummonerVO.class);
 
         return responseEntity.getBody();
     }

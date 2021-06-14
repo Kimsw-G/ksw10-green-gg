@@ -33,7 +33,7 @@ p {
     font-size: 14px;
 }
 
-/*.arrow_box:after {*/w
+/*.arrow_box:after {*/
 /*    position: absolute;*/
 /*    bottom: 100%;*/
 /*    left: 50%;*/
@@ -51,3 +51,8 @@ p {
 /*td:hover + p.arrow_box {*/
 /*    display: block;*/
 /*}*/
+
+footer{
+    height: 300px;
+}
+
